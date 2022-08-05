@@ -7,32 +7,42 @@ import axios from "axios";
 function App() {
   const [stocks, setStocks] = useState([]);
 
+  /*---------------------POST TO BACKEND-----------------------------*/
   const addNewStock = (stock) => {
-    // This function adds a new js object stock to stocks
-    console.log(stock.ticker);
-    console.log(stock.shares);
-    const newStock = {
-      stock_id: 5,
-      ticker: stock.ticker,
-      shares: parseInt(stock.shares),
-      price: 15.0,
-      date: "2022-08-01",
-    };
-    const newStocks = [...stocks, newStock];
-    setStocks(newStocks);
+    axios
+      .post("https://personal-stocks-portfolio.herokuapp.com/stocks", {
+        ticker: stock.ticker,
+        shares: stock.shares,
+      })
+      .catch((error) => {
+        console.log(<section>{error.response.data.message}</section>);
+      })
+      .finally(() => {
+        refreshStocks();
+      });
   };
 
+  /* -------------------------Delete--------------------------------------- */
   const deleteStock = (id) => {
     for (let i = 0; i < stocks.length; i++) {
       if (stocks[i].id === id) {
         stocks.splice(i, 1);
+        break; //remove an entire object that is a single stock instance with that id
       }
     }
     const newStocks = [...stocks];
     setStocks(newStocks);
-  };
 
-  useEffect(() => {
+    axios
+      .delete(`https://personal-stocks-portfolio.herokuapp.com/stocks/${id}`)
+      .then((response) => {})
+      .catch((error) => {
+        console.log(<section>{error.response.datamessage}</section>);
+      });
+  };
+  /* -------------------------Get portfolio from backend----------------------------------*/
+
+  const refreshStocks = () => {
     axios
       .get(
         "https://personal-stocks-portfolio.herokuapp.com/stocks/portfolio/value"
@@ -43,8 +53,15 @@ function App() {
       .catch((error) => {
         console.log(<section>{error.response.data.message}</section>);
       });
+  };
+
+  /*---------UseEffect (execues one time when App is called)---------------*/
+
+  useEffect(() => {
+    refreshStocks();
   }, []);
 
+  /* ------------------------RETURN-------------------------------------------*/
   return (
     <div id="App">
       <header>
