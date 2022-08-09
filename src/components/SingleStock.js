@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-
+import "./SingleStock.css";
 const SingleStock = (props) => {
   const deleteSingleStock = () => {
     props.deleteStockCallBack(props.id);
@@ -10,8 +10,8 @@ const SingleStock = (props) => {
       <ul>
         <li> ID: {props.id}</li>
         <li> shares: {props.shares}</li>
-        <li> price:{props.price}</li>
-        <li> total value: {props.stockValue}</li>
+        <li> price: ${props.price}</li>
+        <li> total stock value: ${props.stockValue}</li>
       </ul>
       <section>
         <button onClick={deleteSingleStock}>🗑</button>

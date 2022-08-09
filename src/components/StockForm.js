@@ -11,6 +11,7 @@ const StockForm = (props) => {
   const onTickerChange = (event) => {
     setFormFields({
       ...formFields,
+      // shares: formFields.shares,
       ticker: event.target.value,
     });
   };
@@ -24,7 +25,7 @@ const StockForm = (props) => {
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    props.addNewStockCallBack(formFields);
+    props.addOrModifyStockCallBack(formFields);
 
     setFormFields({
       ticker: "",
@@ -35,22 +36,23 @@ const StockForm = (props) => {
   return (
     <form onSubmit={onFormSubmit}>
       <div>
-        <label htmlFor="stockTicker">stock ticker:</label>
+        <label htmlFor="stockTicker">stock ticker: </label>
         <input
           name="stockTicker"
           value={formFields.ticker}
           onChange={onTickerChange}
         />
       </div>
+
       <div>
-        <label htmlFor="stockShares">number of shares:</label>
+        <label htmlFor="stockShares">number of shares: </label>
         <input
           name="stockShares"
           value={formFields.shares}
           onChange={onSharesChange}
         />
       </div>
-      <input type="submit" value="Add Stock" />
+      <input type="submit" value="add stock / modify stock" />
     </form>
   );
 };
