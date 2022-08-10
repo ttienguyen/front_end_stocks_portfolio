@@ -12,6 +12,7 @@ const Stocks = (props) => {
           price={stock.price}
           stockValue={stock.stock_value}
           deleteStockCallBack={props.deleteStockCallBack}
+          chartPricesCallBack={props.chartPricesCallBack}
         ></SingleStock>
       </div>
     );

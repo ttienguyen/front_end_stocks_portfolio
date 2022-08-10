@@ -2,65 +2,15 @@ import React, { useState, useEffect } from "react";
 import Stocks from "./components/Stocks.js";
 import "./App.css";
 import StockForm from "./components/StockForm.js";
+import ChartPrices from "./components/ChartPrices.js";
 import axios from "axios";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Chart } from "react-chartjs-2";
 
 function App() {
   const [stocks, setStocks] = useState([]);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [date, setDate] = useState("");
-  // monthlyPrices is a list of prices for the stock held in currentStock
-  const [monthlyPrices, setMonthlyPrices] = useState([]);
-  const [currentStock, setCurrentStock] = useState({}); //js object not quite a dictionary
-  const options = {
-    plugins: {
-      title: {
-        display: true,
-        text: "Test",
-      },
-      legend: {
-        display: true,
-        position: "bottom",
-      },
-    },
-  };
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-
-  const dataset1 = {
-    type: "line",
-    label: "Dataset 1",
-    data: [1, 2, 3, 4, 5, 6, 7],
-  };
-
-  const data = {
-    labels: labels,
-    datasets: [
-      dataset1,
-      {
-        type: "bar",
-        label: "Dataset 2",
-        data: [1, -1, 1, -2, 1, -3, 1],
-      },
-    ],
-  };
+  const [chartStockID, setChartStockID] = useState(26);
+  const [chartStockTicker, setChartStockTicker] = useState("MSFT");
 
   /*---------------------POST or PUT TO BACKEND-----------------------------*/
   const addOrModifyStock = (stock) => {
@@ -105,6 +55,18 @@ function App() {
     }
   };
 
+  const chartPrices = (id) => {
+    let stock = {};
+    for (let i = 0; i < stocks.length; i++) {
+      if (stocks[i].id === id) {
+        stock = stocks[i];
+        break; //remove an entire object that is a single stock instance with that id
+      }
+    }
+    setChartStockID(stock.id);
+    setChartStockTicker(stock.ticker);
+  };
+
   /* -------------------------Delete--------------------------------------- */
   const deleteStock = (id) => {
     for (let i = 0; i < stocks.length; i++) {
@@ -121,37 +83,6 @@ function App() {
       .then((response) => {})
       .catch((error) => {
         console.log(<section>{error.response.datamessage}</section>);
-      });
-  };
-
-  /* -------------------------Get prices for one stock from backend----------------------------------*/
-
-  const getPricesForStock = (id) => {
-    let stockID = 0;
-    for (let i = 0; i < stocks.length; i++) {
-      if (stocks[i].id === id) {
-        stockID = stocks[i].id;
-        setCurrentStock(stocks[i]);
-        break;
-      }
-    }
-    axios
-      .get(
-        `https://personal-stocks-portfolio.herokuapp.com/stocks/${stockID}/prices`
-      )
-      .then((response) => {
-        const labels = [];
-        for each element in response.data.prices
-          append date to labels
-        newData = {
-          labels: labels;
-          datasets: ...
-        }
-        setChartData(newData)
-        setMonthlyPrices(response.data.prices);
-      })
-      .catch((error) => {
-        console.log(<section>{error.response.data.message}</section>);
       });
   };
 
@@ -181,12 +112,20 @@ function App() {
     <div id="App">
       <header>
         <h1>Personal Stock Portfolio</h1>
+
         <p>Total portfolio value: ${portfolioValue}</p>
-        <p> at current date: {date}</p>
+        <p> at date: {date}</p>
       </header>
-      <Stocks stocks={stocks} deleteStockCallBack={deleteStock} />
+      <Stocks
+        stocks={stocks}
+        deleteStockCallBack={deleteStock}
+        chartPricesCallBack={chartPrices}
+      />
       <StockForm addOrModifyStockCallBack={addOrModifyStock} />
-      <Chart options={options} data={data} />
+      <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+      <footer>
+        <p>Designed and programmed by Thuytien Nguyen</p>
+      </footer>
     </div>
   );
 }
