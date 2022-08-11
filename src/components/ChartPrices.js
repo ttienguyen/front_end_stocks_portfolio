@@ -11,7 +11,7 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
-import { Chart } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 ChartJS.register(CategoryScale);
 ChartJS.register(LinearScale);
 ChartJS.register(PointElement);
@@ -52,23 +52,41 @@ const initialData = {
 /* -------------------------Get prices for one stock from backend----------------------------------*/
 
 const ChartPrices = (props) => {
+  // const [chartOptions, setChartOptions] = useState({
+  //   plugins: {
+  //     title: {
+  //       display: true,
+  //       text: `Monthly Prices ${props.ticker}`,
+  //     },
+  //     legend: {
+  //       display: true,
+  //       position: "bottom",
+  //     },
+  //   },
+  // });
   const [chartOptions, setChartOptions] = useState({
-    plugins: {
-      title: {
-        display: true,
-        text: "Monthly Prices",
-      },
-      legend: {
-        display: true,
-        position: "bottom",
+    scales: {
+      yAxes: 
+        {
+          min: 0,
+          max:1000,
+          stepsize: 100,
+        },
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      
+    },
+    legend: {
+      labels: {
+        fontSize: 20,
       },
     },
   });
   const [chartData, setChartData] = useState(initialData);
 
-  console.log(
-    `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
-  );
   axios
     .get(
       `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
@@ -98,7 +116,7 @@ const ChartPrices = (props) => {
       console.log(<section>{error.response.data.message}</section>);
     });
 
-  return <Chart options={chartOptions} data={chartData} />;
+  return <Line options={chartOptions} data={chartData} />;
 };
 
 export default ChartPrices;

@@ -9,8 +9,8 @@ function App() {
   const [stocks, setStocks] = useState([]);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [date, setDate] = useState("");
-  const [chartStockID, setChartStockID] = useState(26);
-  const [chartStockTicker, setChartStockTicker] = useState("MSFT");
+  const [chartStockID, setChartStockID] = useState(0);
+  const [chartStockTicker, setChartStockTicker] = useState("");
 
   /*---------------------POST or PUT TO BACKEND-----------------------------*/
   const addOrModifyStock = (stock) => {
@@ -54,7 +54,7 @@ function App() {
         });
     }
   };
-
+  /* -------------------------chartPrices--------------------------------------- */
   const chartPrices = (id) => {
     let stock = {};
     for (let i = 0; i < stocks.length; i++) {
@@ -108,6 +108,7 @@ function App() {
   useEffect(refreshStocks, []);
 
   /* ------------------------RETURN-------------------------------------------*/
+
   return (
     <div id="App">
       <header>
@@ -122,7 +123,12 @@ function App() {
         chartPricesCallBack={chartPrices}
       />
       <StockForm addOrModifyStockCallBack={addOrModifyStock} />
-      <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+      {chartStockID ? (
+        <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+      ) : (
+        ""
+      )}
+      {/* <ChartPrices id={chartStockID} ticker={chartStockTicker} /> */}
       <footer>
         <p>Designed and programmed by Thuytien Nguyen</p>
       </footer>
