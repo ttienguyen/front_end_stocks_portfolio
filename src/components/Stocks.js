@@ -13,6 +13,7 @@ const Stocks = (props) => {
           stockValue={stock.stock_value}
           deleteStockCallBack={props.deleteStockCallBack}
           chartPricesCallBack={props.chartPricesCallBack}
+          chartPercentGainCallBack={props.chartPercentGainCallBack}
         ></SingleStock>
       </div>
     );

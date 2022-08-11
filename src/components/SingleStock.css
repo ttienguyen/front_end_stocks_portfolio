@@ -1,3 +1,17 @@
-.single_stock {
-    margin: 5rem;
-  }
+.single-box {
+  width: 300px;
+  height: 200px;
+  margin: 10px;
+  border: 2px solid black;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  padding: 10px;
+  background-color: lightblue;
+  overflow: auto;
+  font-size: 1em;
+  text-align: left;
+  display: flex;
+  flex-direction: column; 
+  justify-content: left;
+  align-items: left; 
+}

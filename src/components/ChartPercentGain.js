@@ -29,7 +29,7 @@ ChartJS.register(Legend);
 //   plugins: {
 //     title: {
 //       display: true,
-//       text: "Monthly Prices",
+//       text: "Percent change",
 //     },
 //     legend: {
 //       display: true,
@@ -52,12 +52,12 @@ const initialData = {
 
 /* -------------------------Get prices for one stock from backend----------------------------------*/
 
-const ChartPrices = (props) => {
+const ChartPercentGain = (props) => {
   const [chartOptions, setChartOptions] = useState({
     plugins: {
       title: {
         display: true,
-        text: "monthly prices",
+        text: "Percent Change",
       },
       legend: {
         display: true,
@@ -65,30 +65,29 @@ const ChartPrices = (props) => {
       },
     },
   });
-
   const [chartData, setChartData] = useState(initialData);
 
-  const callingPrices = () => {
+  const callingPercentGain = () => {
     axios
       .get(
         `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
       )
       .then((response) => {
-        const priceRecords = response.data.prices;
+        const percentGainRecords = response.data.prices;
         const labels = [];
-        const prices = [];
-        for (let idx in priceRecords) {
-          let priceRecord = priceRecords[idx];
-          labels.push(priceRecord.date);
-          prices.push(priceRecord.price);
+        const percentGains = [];
+        for (let idx in percentGainRecords) {
+          let percentGainRecord = percentGainRecords[idx];
+          labels.push(percentGainRecord.date);
+          percentGains.push(percentGainRecord.percentage_gain);
         }
         const newChartData = {
           labels: labels,
           datasets: [
             {
               type: "line",
-              label: "Monthly Prices",
-              data: prices,
+              label: "Percent Gain",
+              data: percentGains,
             },
           ],
         };
@@ -99,7 +98,7 @@ const ChartPrices = (props) => {
       });
   };
 
-  useEffect(callingPrices, []);
+  useEffect(callingPercentGain, []);
 
   return (
     <div>
@@ -108,4 +107,4 @@ const ChartPrices = (props) => {
   );
 };
 
-export default ChartPrices;
+export default ChartPercentGain;

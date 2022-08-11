@@ -3,7 +3,9 @@ import Stocks from "./components/Stocks.js";
 import "./App.css";
 import StockForm from "./components/StockForm.js";
 import ChartPrices from "./components/ChartPrices.js";
+import ChartPercentGain from "./components/ChartPercentGain.js";
 import axios from "axios";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   const [stocks, setStocks] = useState([]);
@@ -66,6 +68,18 @@ function App() {
     setChartStockID(stock.id);
     setChartStockTicker(stock.ticker);
   };
+  /* -------------------------chartPercentGain--------------------------------------- */
+  const chartPercentGain = (id) => {
+    let stock = {};
+    for (let i = 0; i < stocks.length; i++) {
+      if (stocks[i].id === id) {
+        stock = stocks[i];
+        break; //remove an entire object that is a single stock instance with that id
+      }
+    }
+    setChartStockID(stock.id);
+    setChartStockTicker(stock.ticker);
+  };
 
   /* -------------------------Delete--------------------------------------- */
   const deleteStock = (id) => {
@@ -111,24 +125,48 @@ function App() {
 
   return (
     <div id="App">
-      <header>
-        <h1>Personal Stock Portfolio</h1>
+      <Router>
+        <nav>
+          <Link to="/Chart"> chart </Link>
+        </nav>
 
+        <Routes>
+          <Route
+            path="/Chart"
+            element={
+              <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+            }
+          />
+        </Routes>
+      </Router>
+
+      <header className="App">
+        <h1>Personal Stock Portfolio</h1>
         <p>Total portfolio value: ${portfolioValue}</p>
         <p> at date: {date}</p>
       </header>
+      <StockForm addOrModifyStockCallBack={addOrModifyStock} />
       <Stocks
         stocks={stocks}
         deleteStockCallBack={deleteStock}
         chartPricesCallBack={chartPrices}
+        chartPercentGainCallBack={chartPercentGain}
       />
-      <StockForm addOrModifyStockCallBack={addOrModifyStock} />
-      {chartStockID ? (
-        <ChartPrices id={chartStockID} ticker={chartStockTicker} />
-      ) : (
-        ""
-      )}
-      {/* <ChartPrices id={chartStockID} ticker={chartStockTicker} /> */}
+      <section>
+        {chartStockID ? (
+          <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+        ) : (
+          ""
+        )}
+      </section>
+
+      <section>
+        {chartStockID ? (
+          <ChartPercentGain id={chartStockID} ticker={chartStockTicker} />
+        ) : (
+          ""
+        )}
+      </section>
       <footer>
         <p>Designed and programmed by Thuytien Nguyen</p>
       </footer>

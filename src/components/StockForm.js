@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import PropTypes from "prop-types";
+import "./StockForm.css";
 
 const StockForm = (props) => {
   const [formFields, setFormFields] = useState({
@@ -35,24 +36,31 @@ const StockForm = (props) => {
 
   return (
     <form onSubmit={onFormSubmit}>
-      <div>
-        <label htmlFor="stockTicker">stock ticker: </label>
-        <input
-          name="stockTicker"
-          value={formFields.ticker}
-          onChange={onTickerChange}
-        />
-      </div>
+      <section className="single-container">
+        <div>
+          <label htmlFor="stockTicker">stock ticker: </label>
+          <input
+            name="stockTicker"
+            value={formFields.ticker}
+            onChange={onTickerChange}
+          />
+        </div>
 
-      <div>
-        <label htmlFor="stockShares">number of shares: </label>
+        <div>
+          <label htmlFor="stockShares">number of shares: </label>
+          <input
+            name="stockShares"
+            value={formFields.shares}
+            onChange={onSharesChange}
+          />
+        </div>
+
         <input
-          name="stockShares"
-          value={formFields.shares}
-          onChange={onSharesChange}
+          className="single-item"
+          type="submit"
+          value="add stock / modify stock"
         />
-      </div>
-      <input type="submit" value="add stock / modify stock" />
+      </section>
     </form>
   );
 };
