@@ -56,7 +56,7 @@ const ChartPrices = (props) => {
     plugins: {
       title: {
         display: true,
-        text: "Monthly Prices",
+        text: `Monthly Prices${props.id}`,
       },
       legend: {
         display: true,
