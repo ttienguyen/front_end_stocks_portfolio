@@ -52,39 +52,19 @@ const initialData = {
 /* -------------------------Get prices for one stock from backend----------------------------------*/
 
 const ChartPrices = (props) => {
-  // const [chartOptions, setChartOptions] = useState({
-  //   plugins: {
-  //     title: {
-  //       display: true,
-  //       text: `Monthly Prices ${props.ticker}`,
-  //     },
-  //     legend: {
-  //       display: true,
-  //       position: "bottom",
-  //     },
-  //   },
-  // });
   const [chartOptions, setChartOptions] = useState({
-    scales: {
-      yAxes: 
-        {
-          min: 0,
-          max:1000,
-          stepsize: 100,
-        },
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-        },
-      
-    },
-    legend: {
-      labels: {
-        fontSize: 20,
+    plugins: {
+      title: {
+        display: true,
+        text: "Monthly Prices",
+      },
+      legend: {
+        display: true,
+        position: "bottom",
       },
     },
   });
+
   const [chartData, setChartData] = useState(initialData);
 
   axios
