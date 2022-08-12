@@ -72,9 +72,9 @@ function App() {
       )
       .then((response) => {
         setPriceData(response.data.prices);
+        setChartStockID(stock.id);
+        setChartStockTicker(stock.ticker);
       });
-    setChartStockID(stock.id);
-    setChartStockTicker(stock.ticker);
   };
   /* -------------------------chartPercentGain--------------------------------------- */
   const chartPercentGain = (id) => {
