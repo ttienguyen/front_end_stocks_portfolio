@@ -13,6 +13,7 @@ function App() {
   const [date, setDate] = useState("");
   const [chartStockID, setChartStockID] = useState(0);
   const [chartStockTicker, setChartStockTicker] = useState("");
+  const [priceData, setPriceData] = useState([]);
 
   /*---------------------POST or PUT TO BACKEND-----------------------------*/
   const addOrModifyStock = (stock) => {
@@ -65,6 +66,13 @@ function App() {
         break; //remove an entire object that is a single stock instance with that id
       }
     }
+    axios
+      .get(
+        `https://personal-stocks-portfolio.herokuapp.com/stocks/${id}/prices`
+      )
+      .then((response) => {
+        setPriceData(response.data.prices);
+      });
     setChartStockID(stock.id);
     setChartStockTicker(stock.ticker);
   };
@@ -125,7 +133,7 @@ function App() {
 
   return (
     <div id="App">
-      <Router>
+      {/* <Router>
         <nav>
           <Link to="/Chart"> chart </Link>
         </nav>
@@ -138,7 +146,7 @@ function App() {
             }
           />
         </Routes>
-      </Router>
+      </Router> */}
 
       <header className="App">
         <h1>Personal Stock Portfolio</h1>
@@ -154,7 +162,11 @@ function App() {
       />
       <section>
         {chartStockID ? (
-          <ChartPrices id={chartStockID} ticker={chartStockTicker} />
+          <ChartPrices
+            id={chartStockID}
+            ticker={chartStockTicker}
+            priceData={priceData}
+          />
         ) : (
           ""
         )}

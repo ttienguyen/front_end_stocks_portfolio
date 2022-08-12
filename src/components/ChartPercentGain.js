@@ -12,7 +12,7 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 ChartJS.register(CategoryScale);
 ChartJS.register(LinearScale);
 ChartJS.register(PointElement);
@@ -40,7 +40,7 @@ ChartJS.register(Legend);
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
 const dataset1 = {
-  type: "line",
+  type: "bar",
   label: "Dataset 1",
   data: [1, 2, 3, 4, 5, 6, 7],
 };
@@ -60,49 +60,62 @@ const ChartPercentGain = (props) => {
         text: "Percent Change",
       },
       legend: {
-        display: true,
-        position: "bottom",
+        display: false,
       },
     },
   });
   const [chartData, setChartData] = useState(initialData);
 
-  const callingPercentGain = () => {
-    axios
-      .get(
-        `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
-      )
-      .then((response) => {
-        const percentGainRecords = response.data.prices;
-        const labels = [];
-        const percentGains = [];
-        for (let idx in percentGainRecords) {
-          let percentGainRecord = percentGainRecords[idx];
-          labels.push(percentGainRecord.date);
-          percentGains.push(percentGainRecord.percentage_gain);
+  axios
+    .get(
+      `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
+    )
+    .then((response) => {
+      const percentGainRecords = response.data.prices;
+      const labels = [];
+      const percentGains = [];
+      const colors = [];
+      for (let idx in percentGainRecords) {
+        let percentGainRecord = percentGainRecords[idx];
+        labels.push(percentGainRecord.date);
+        percentGains.push(percentGainRecord.percentage_gain);
+        if (percentGainRecord.percentage_gain > 0) {
+          colors.push("green");
+        } else {
+          colors.push("red");
         }
-        const newChartData = {
-          labels: labels,
-          datasets: [
-            {
-              type: "line",
-              label: "Percent Gain",
-              data: percentGains,
-            },
-          ],
-        };
-        setChartData(newChartData);
-      })
-      .catch((error) => {
-        console.log(<section>{error.response.data.message}</section>);
+      }
+      const newChartData = {
+        labels: labels,
+        datasets: [
+          {
+            type: "bar",
+            label: `Percent Gain for ${props.ticker}`,
+            data: percentGains,
+            backgroundColor: colors,
+          },
+        ],
+      };
+      setChartData(newChartData);
+      setChartOptions({
+        plugins: {
+          title: {
+            display: true,
+            text: `Percent Change ${props.ticker}`,
+          },
+          legend: {
+            display: false,
+          },
+        },
       });
-  };
-
-  useEffect(callingPercentGain, []);
+    })
+    .catch((error) => {
+      console.log(<section>{error.response.data.message}</section>);
+    });
 
   return (
     <div>
-      <Line options={chartOptions} data={chartData} />;
+      <Bar options={chartOptions} data={chartData} />;
     </div>
   );
 };

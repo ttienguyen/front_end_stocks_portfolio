@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
 import {
   Chart as ChartJS,
@@ -22,88 +21,41 @@ ChartJS.register(Title);
 ChartJS.register(Tooltip);
 ChartJS.register(Legend);
 
-// monthlyPrices is a list of prices for the stock held in currentStock
-// const [monthlyPrices, setMonthlyPrices] = useState([]);
-// const [currentStock, setCurrentStock] = useState({}); //js object not quite a dictionary
-// const options = {
-//   plugins: {
-//     title: {
-//       display: true,
-//       text: "Monthly Prices",
-//     },
-//     legend: {
-//       display: true,
-//       position: "bottom",
-//     },
-//   },
-// };
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-const dataset1 = {
-  type: "line",
-  label: "Dataset 1",
-  data: [1, 2, 3, 4, 5, 6, 7],
-};
-
-const initialData = {
-  labels: labels,
-  datasets: [dataset1],
-};
-
 /* -------------------------Get prices for one stock from backend----------------------------------*/
 
 const ChartPrices = (props) => {
-  const [chartOptions, setChartOptions] = useState({
+  const chartOptions = {
     plugins: {
-      title: {
-        display: true,
-        text: "monthly prices",
-      },
       legend: {
         display: true,
-        position: "bottom",
+        position: "top",
       },
     },
-  });
-
-  const [chartData, setChartData] = useState(initialData);
-
-  const callingPrices = () => {
-    axios
-      .get(
-        `https://personal-stocks-portfolio.herokuapp.com/stocks/${props.id}/prices`
-      )
-      .then((response) => {
-        const priceRecords = response.data.prices;
-        const labels = [];
-        const prices = [];
-        for (let idx in priceRecords) {
-          let priceRecord = priceRecords[idx];
-          labels.push(priceRecord.date);
-          prices.push(priceRecord.price);
-        }
-        const newChartData = {
-          labels: labels,
-          datasets: [
-            {
-              type: "line",
-              label: "Monthly Prices",
-              data: prices,
-            },
-          ],
-        };
-        setChartData(newChartData);
-      })
-      .catch((error) => {
-        console.log(<section>{error.response.data.message}</section>);
-      });
   };
 
-  useEffect(callingPrices, []);
+  const priceRecords = props.priceData;
+  const labels = [];
+  const prices = [];
+  for (let idx in priceRecords) {
+    let priceRecord = priceRecords[idx];
+    labels.push(priceRecord.date);
+    prices.push(priceRecord.price);
+  }
+  const newChartData = {
+    labels: labels,
+    datasets: [
+      {
+        type: "line",
+        label: `Monthly Prices for ${props.ticker}`,
+        data: prices,
+        borderColor: "#084de0",
+      },
+    ],
+  };
 
   return (
     <div>
-      <Line options={chartOptions} data={chartData} />;
+      <Line options={chartOptions} data={newChartData} />;
     </div>
   );
 };
