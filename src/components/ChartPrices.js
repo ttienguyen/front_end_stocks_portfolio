@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Chart as ChartJS,
@@ -12,6 +12,9 @@ import {
   BarElement,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
+import axios from "axios";
+
 ChartJS.register(CategoryScale);
 ChartJS.register(LinearScale);
 ChartJS.register(PointElement);
@@ -32,14 +35,21 @@ const ChartPrices = (props) => {
       },
     },
   };
-
   const priceRecords = props.priceData;
   const labels = [];
   const prices = [];
+  const percentGains = [];
+  const colors = [];
   for (let idx in priceRecords) {
     let priceRecord = priceRecords[idx];
     labels.push(priceRecord.date);
     prices.push(priceRecord.price);
+    percentGains.push(priceRecord.percentage_gain);
+    if (priceRecord.percentage_gain > 0) {
+      colors.push("green");
+    } else {
+      colors.push("red");
+    }
   }
   const newChartData = {
     labels: labels,
@@ -52,10 +62,23 @@ const ChartPrices = (props) => {
       },
     ],
   };
+  /*------------percentGainData Chart--------------*/
+  const newPercentChartData = {
+    labels: labels,
+    datasets: [
+      {
+        type: "bar",
+        label: `Percent Gain for ${props.ticker}`,
+        data: percentGains,
+        backgroundColor: colors,
+      },
+    ],
+  };
 
   return (
     <div>
       <Line options={chartOptions} data={newChartData} />;
+      <Bar options={chartOptions} data={newPercentChartData} />;
     </div>
   );
 };

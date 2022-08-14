@@ -1,9 +1,10 @@
 import SingleStock from "./SingleStock.js";
+import "./Stocks.css";
 
 const Stocks = (props) => {
   const stockComponents = props.stocks.map((stock, index) => {
     return (
-      <div>
+      <div className="flex-container">
         <SingleStock
           key={index}
           id={stock.id}
@@ -13,11 +14,10 @@ const Stocks = (props) => {
           stockValue={stock.stock_value}
           deleteStockCallBack={props.deleteStockCallBack}
           chartPricesCallBack={props.chartPricesCallBack}
-          chartPercentGainCallBack={props.chartPercentGainCallBack}
         ></SingleStock>
       </div>
     );
   });
-  return <section>{stockComponents}</section>;
+  return <section className="flex-container">{stockComponents}</section>;
 };
 export default Stocks;
