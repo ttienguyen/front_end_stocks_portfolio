@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
-import axios from "axios";
 
 ChartJS.register(CategoryScale);
 ChartJS.register(LinearScale);
